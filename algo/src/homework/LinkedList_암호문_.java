@@ -5,33 +5,33 @@ import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 
 
-	class Node {
+	class Node_암호문 {
 		int data;
-		Node next;
-		Node prev;
+		Node_암호문 next;
+		Node_암호문 prev;
 
-		Node() {
+		Node_암호문() {
 		}
 
-		Node(int data) {
+		Node_암호문(int data) {
 			this.data = data;
 		}
 	}
 
 	class linkedList {
-		Node head;
-		Node tail;
+		Node_암호문 head;
+		Node_암호문 tail;
 		int size;
 
 		public linkedList() {
-			head = new Node();
-			tail = new Node();
+			head = new Node_암호문();
+			tail = new Node_암호문();
 			head.next = tail;
 			tail.prev = head;
 		}
 
 		void addLast(int data) {
-			Node newNode = new Node(data);
+			Node_암호문 newNode = new Node_암호문(data);
 
 			newNode.next = tail;
 			newNode.prev = tail.prev;
@@ -43,9 +43,9 @@ import java.util.StringTokenizer;
 		}
 
 		void add(int idx, int data) {
-			Node newNode = new Node(data);
+			Node_암호문 newNode = new Node_암호문(data);
 
-			Node curr = head;
+			Node_암호문 curr = head;
 			for (int i = 0; i < idx; i++) {
 				curr = curr.next;
 			}
@@ -59,7 +59,7 @@ import java.util.StringTokenizer;
 		}
 
 		void remove(int idx) {
-			Node curr = head.next;
+			Node_암호문 curr = head.next;
 			for (int i = 0; i < idx; i++) {
 				curr = curr.next;
 			}
@@ -74,7 +74,7 @@ import java.util.StringTokenizer;
 		void printList() {
 			StringBuilder sb = new StringBuilder();
 
-			Node curr = head.next;
+			Node_암호문 curr = head.next;
 			for (int i = 0; i < 10; i++) {
 				sb.append(curr.data + " ");
 				curr = curr.next;

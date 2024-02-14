@@ -25,6 +25,8 @@ public class 방배정 {
 			
 			
 			
+			
+			
 		}
 
 	}
