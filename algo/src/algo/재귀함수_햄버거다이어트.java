@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 
 public class 재귀함수_햄버거다이어트 {
 
-	static int N, L, result = 0;
+	static int N, L, result;
 	static int[] food, kcals;
 
 	public static void main(String[] args) throws Exception {
@@ -29,10 +29,12 @@ public class 재귀함수_햄버거다이어트 {
 
 				st = new StringTokenizer(br.readLine());
 
-				food[i] = Integer.parseInt(st.nextToken());
 				kcals[i] = Integer.parseInt(st.nextToken());
+				food[i] = Integer.parseInt(st.nextToken());
 
 			}
+			
+			result = 0;
 
 			pig(0, 0, 0);
 			System.out.printf("#%d %d\n", index, result);
@@ -45,11 +47,7 @@ public class 재귀함수_햄버거다이어트 {
 		
 		if (total > L) return;
 
-		System.out.println(sum);
-		System.out.println(total);
-		System.out.println(idx);
-		
-		if (idx == N) {
+		if (idx >= N) {
 			
 			if(sum > result) {
 				result = sum;
