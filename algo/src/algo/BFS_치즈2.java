@@ -84,7 +84,7 @@ public class BFS_치즈2 {
                         q.offer(new int[] { nx, ny }); // 큐에 추가하여 탐색 계속
                     } else { // 치즈가 있는 경우
                         cheese--; // 치즈 개수 감소
-                        board[nx][ny] = 0; // 치즈 녹음
+                        board[nx][ny] =  0; // 치즈 녹음
                     }
                 }
             }
