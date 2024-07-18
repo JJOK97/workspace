@@ -6,19 +6,20 @@ class Solution {
         
         // 그래프를 인접 리스트 형태로 생성
         List<List<Integer>> graph = new ArrayList<>();
-        for (int i = 0; i <= n; i++) {
-            graph.add(new ArrayList<>());
+        for(int i = 0; i<= n; i++){
+            graph.add(new ArrayList<>());    
         }
         
-        for (int[] wire : wires) {
+        for(int[] wire : wires){
             int v1 = wire[0];
             int v2 = wire[1];
+            
             graph.get(v1).add(v2);
             graph.get(v2).add(v1);
         }
         
         // 각 전선을 하나씩 제거하면서 최소 차이를 계산
-        for (int[] wire : wires) {
+        for(int[] wire : wires){
             int v1 = wire[0];
             int v2 = wire[1];
             
@@ -28,7 +29,10 @@ class Solution {
             
             // BFS를 이용해 한쪽 서브트리의 크기를 계산
             int subtreeSize = bfs(v1, graph, n);
-            int difference = Math.abs(n - 2 * subtreeSize);
+            int another = n - subtreeSize;
+            int difference = Math.abs(subtreeSize  - another);
+            
+            //비교
             answer = Math.min(answer, difference);
             
             // 제거한 전선을 다시 복구
@@ -39,19 +43,20 @@ class Solution {
         return answer;
     }
     
-    // BFS를 이용해 서브트리의 크기를 계산하는 메서드
-    private int bfs(int start, List<List<Integer>> graph, int n) {
+    // BFS
+    private int bfs(int start, List<List<Integer>> graph, int n){
+        // 송전탑이 1부터 시작인걸 고려
         boolean[] visited = new boolean[n + 1];
         Queue<Integer> queue = new LinkedList<>();
         queue.add(start);
         visited[start] = true;
         int count = 0;
         
-        while (!queue.isEmpty()) {
+        while (!queue.isEmpty()){
             int node = queue.poll();
             count++;
-            for (int neighbor : graph.get(node)) {
-                if (!visited[neighbor]) {
+            for(int neighbor : graph.get(node)){
+                if(!visited[neighbor]){
                     visited[neighbor] = true;
                     queue.add(neighbor);
                 }
@@ -59,5 +64,6 @@ class Solution {
         }
         
         return count;
+        
     }
 }
