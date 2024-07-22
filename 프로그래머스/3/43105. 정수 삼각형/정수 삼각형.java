@@ -1,6 +1,6 @@
 class Solution {
     public int solution(int[][] triangle) {
-        int answer = 0;
+        int answer = triangle[0][0];
         
         for(int i = triangle.length - 2; i >= 0; i--){
             for(int j = 0; j < triangle[i].length; j++){
