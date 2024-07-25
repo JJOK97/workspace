@@ -1,4 +1,5 @@
 import java.util.*;
+
 class Process {
     int priority;
     int location;
@@ -7,42 +8,45 @@ class Process {
         this.priority = priority;
         this.location = location;
     }
+    
 }
 
 class Solution {
     public int solution(int[] priorities, int location) {
-
         Queue<Process> queue = new LinkedList<>();
         
-        for (int i = 0; i < priorities.length; i++){
-            queue.add(new Process(priorities[i],i));
+        for(int i = 0; i < priorities.length; i++){
+            queue.add(new Process(priorities[i], i));
         }
         
         int order = 0;
         
-        while (!queue.isEmpty()){
+        while(!queue.isEmpty()){
+            
             Process current = queue.poll();
             
-            boolean hasHigherPriority = false;
+            boolean check = false;
             
             for(Process process : queue){
                 if(process.priority > current.priority){
-                    hasHigherPriority = true;
+                    check = true;
                     break;
                 }
             }
             
-            if(hasHigherPriority){
-                queue.add(current);
-            } else {
+            if(!check){
                 order++;
                 if(current.location == location){
                     return order;
                 }
+            } else {
+                queue.add(current);
+                
             }
+                
         }
+        
         
         return -1;
     }
-    
 }
