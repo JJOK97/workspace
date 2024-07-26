@@ -4,13 +4,12 @@ class Process {
     int priority;
     int location;
     
-    Process(int priority, int location){
+    Process (int priority, int location) {
         this.priority = priority;
         this.location = location;
     }
     
 }
-
 class Solution {
     public int solution(int[] priorities, int location) {
         Queue<Process> queue = new LinkedList<>();
@@ -19,12 +18,10 @@ class Solution {
             queue.add(new Process(priorities[i], i));
         }
         
-        int order = 0;
+        int count = 0;
         
         while(!queue.isEmpty()){
-            
             Process current = queue.poll();
-            
             boolean check = false;
             
             for(Process process : queue){
@@ -35,17 +32,16 @@ class Solution {
             }
             
             if(!check){
-                order++;
+                count++;
                 if(current.location == location){
-                    return order;
+                    return count;
                 }
             } else {
                 queue.add(current);
-                
             }
-                
+            
+            
         }
-        
         
         return -1;
     }
