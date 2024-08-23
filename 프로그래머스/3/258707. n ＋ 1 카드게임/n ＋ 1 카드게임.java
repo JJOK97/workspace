@@ -1,80 +1,81 @@
 import java.util.*;
 
 class Solution {
-    
     public int solution(int coins, int[] cards) {
-        int rounds = 0; // 최대 라운드를 기록할 변수
-        
-        int n = cards.length;
-        int setting = n / 3; // 초기 카드 수
-        Set<Integer> hand = new HashSet<>(); // 초기 손에 들고 있는 카드
-        Set<Integer> roundCards = new HashSet<>(); // 각 라운드에서 추가된 카드들
-        
-        // 초기 손에 들고 있는 카드를 세팅
-        for(int i = 0; i < setting; i++) {
-            hand.add(cards[i]);
+        Set<Integer> curr = new HashSet<>();
+        Set<Integer> newCard = new HashSet<>();
+
+        int idx = 0;
+        for (; idx < cards.length / 3; idx++) {
+            curr.add(cards[idx]);
         }
-        
-        int targetSum = n + 1; // 각 라운드에서 카드 두 장의 합이 되어야 하는 목표 값
-        
-        // 게임 시작
-        while (true) {
-            rounds++;
-            
-            if (setting >= n) {
-                // 모든 카드를 사용한 경우 종료
-                break;
-            }
-            
-            // 이번 라운드에서 두 장의 카드를 뽑음
-            roundCards.add(cards[setting]);
-            roundCards.add(cards[setting + 1]);
-            setting += 2;
-            
-            boolean check = false; // 이번 라운드를 성공적으로 넘겼는지 확인
-            
-            // Step1. 손에 있는 카드로 해결 가능한지 확인
-            for (int card : hand) {
-                if (hand.contains(targetSum - card)) {
-                    hand.remove(card);
-                    hand.remove(targetSum - card);
+
+        int rounds = 1;
+        int target = cards.length + 1;
+
+        while (idx < cards.length) {
+            // 두장 드로우
+            newCard.add(cards[idx++]);
+            newCard.add(cards[idx++]);
+
+            boolean check = false;
+            int first = -1, second = -1;
+
+            // 현재 손에 있는 카드들에서 목표 합을 이루는 쌍을 찾음
+            for (int card : curr) {
+                if (curr.contains(target - card)) {
                     check = true;
+                    first = card;
+                    second = target - card;
                     break;
                 }
             }
-            
-            // Step2. 손에 있는 카드만으로 해결 불가능한 경우
+
+            // 현재 손에 있는 카드들만으로 쌍을 찾지 못한 경우
             if (!check && coins > 0) {
-                for (int card : hand) {
-                    if (roundCards.contains(targetSum - card)) {
-                        hand.remove(card);
-                        roundCards.remove(targetSum - card);
+                for (int card : curr) {
+                    
+                    int another = target - card;
+                    
+                    if (newCard.contains(another)) {
                         coins--;
                         check = true;
+                        first = card;
+                        second = another;
                         break;
                     }
                 }
             }
-            
-            // Step3. 손에 있는 카드와 추가 카드 모두로도 해결 불가능한 경우
+
+            // 추가 카드들끼리 조합해 쌍을 찾는 경우
+            // 한 카드씩 체크해본 후에 두 카드를 확인해야함
             if (!check && coins > 1) {
-                for (int card : roundCards) {
-                    if (roundCards.contains(targetSum - card)) {
-                        roundCards.remove(card);
-                        roundCards.remove(targetSum - card);
+                for (int card : newCard) {
+                    int another = target - card;
+
+                    if (newCard.contains(another)) {
                         coins -= 2;
                         check = true;
+                        first = card;
+                        second = another;
                         break;
                     }
                 }
             }
-            
-            // 이 라운드를 완수하지 못했으면 게임 종료
+
+            // 만약 쌍을 찾지 못했다면 게임 종료
             if (!check) {
                 break;
+            } else {
+                newCard.remove(first);
+                newCard.remove(second);
+                curr.remove(first);
+                curr.remove(second);
             }
+
+            rounds++;
         }
-        
+
         return rounds;
     }
 }
