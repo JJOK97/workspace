@@ -1,22 +1,33 @@
 import java.util.Scanner;
 
 public class Main {
+    static int answer = Integer.MAX_VALUE;
+
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        int n = scanner.nextInt();
-        int[] dp = new int[n + 1];
+        Scanner sc = new Scanner(System.in);
+        int X = sc.nextInt();
+        sc.close();
 
-        dp[1] = 0; // 1은 이미 1이므로 연산 횟수는 0
+        test(X, 0);
+        System.out.println(answer);
+    }
 
-        for (int i = 2; i <= n; i++) {
-            // 현재 숫자에서 1을 빼는 경우
-            dp[i] = dp[i - 1] + 1;
-
-            // 현재 숫자가 2 또는 3으로 나누어 떨어지는 경우
-            if (i % 2 == 0) dp[i] = Math.min(dp[i], dp[i / 2] + 1);
-            if (i % 3 == 0) dp[i] = Math.min(dp[i], dp[i / 3] + 1);
+    public static void test(int X, int result) {
+        if (X == 1) {
+            answer = Math.min(answer, result);
+            return;
         }
 
-        System.out.println(dp[n]);
+        if (result >= answer) {
+            return;  // 가지치기: 이미 찾은 최소값보다 크거나 같으면 탐색 중단
+        }
+
+        if (X % 3 == 0) {
+            test(X / 3, result + 1);
+        }
+        if (X % 2 == 0) {
+            test(X / 2, result + 1);
+        }
+        test(X - 1, result + 1);
     }
 }
