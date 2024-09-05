@@ -2,99 +2,102 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int N;
-    static int[] population;
-    static List<List<Integer>> graph;
-    static int totalPopulation = 0;
-    static int minDifference = Integer.MAX_VALUE;
+    static int n, min;
+    static int[] people;
+    static boolean[] check;
+    static int[] arr; // 인덱스:지역 , 요소값:선거구
+    static ArrayList<ArrayList<Integer>> graph = new ArrayList<ArrayList<Integer>>();// 간선표시
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
-        
-        // 인구 정보와 그래프 초기화
-        population = new int[N + 1];
-        graph = new ArrayList<>();
-        for (int i = 0; i <= N; i++) graph.add(new ArrayList<>());
+        n = Integer.parseInt(br.readLine());
+        min = Integer.MAX_VALUE;
+        people = new int[n];
+        arr = new int[n + 1];
 
-        // 인구 정보 입력 받기
         StringTokenizer st = new StringTokenizer(br.readLine());
-        for (int i = 1; i <= N; i++) {
-            population[i] = Integer.parseInt(st.nextToken());
-            totalPopulation += population[i];
-        }
+        for (int i = 0; i < n; i++)
+            people[i] = Integer.parseInt(st.nextToken());
 
-        // 그래프 정보 입력 받기
-        for (int i = 1; i <= N; i++) {
+        for (int i = 0; i <= n; i++)
+            graph.add(new ArrayList<Integer>());
+
+        for (int i = 1; i <= n; i++) {
             st = new StringTokenizer(br.readLine());
-            int count = Integer.parseInt(st.nextToken());
-            for (int j = 0; j < count; j++) {
-                int neighbor = Integer.parseInt(st.nextToken());
-                graph.get(i).add(neighbor);
-            }
+            int cnt = Integer.parseInt(st.nextToken());
+            for (int j = 0; j < cnt; j++)
+                graph.get(i).add(Integer.parseInt(st.nextToken()));
         }
+        /////////////////////////////////////////////////////////////////// 입력
 
-        // 모든 가능한 분할 탐색 시작
-        divide(1, 0);
-
-        // 결과 출력
-        System.out.println(minDifference == Integer.MAX_VALUE ? -1 : minDifference);
+        // 선거구 조합
+        back(1);
+        if (min == Integer.MAX_VALUE)
+            System.out.println(-1);
+        else
+            System.out.println(min);
     }
 
-    // 비트마스킹을 이용한 모든 가능한 분할 생성
-    static void divide(int index, int mask) {
-        if (index > N) {
-            // 모든 구역을 고려했을 때
-            if (mask != 0 && mask != ((1 << N) - 1)) {
-                // 두 선거구 모두 연결되어 있는지 확인
-                if (isConnected(mask) && isConnected(((1 << N) - 1) ^ mask)) {
-                    int diff = calculateDifference(mask);
-                    minDifference = Math.min(minDifference, diff);
+    public static void back(int depth){
+
+        if(depth == n + 1){
+
+            check = new boolean[n + 1];
+
+            int a = 0, b = 0;
+
+            for(int i = 0; i < n; i++){
+                if(arr[i + 1] == 1){
+                    a += people[i];
+                } else {
+                    b += people[i];
                 }
             }
+
+            int cnt = 0;
+
+            for(int i = 1; i <= n; i++){
+                if(check[i]){
+                    continue;
+                }
+                link(i , arr[i]);
+                cnt++;
+            }
+            
+            if(cnt == 2){
+                min = Math.min(min, Math.abs(a - b));
+            }
+            
             return;
+
         }
 
-        // 현재 구역을 선거구 A에 포함
-        divide(index + 1, mask | (1 << (index - 1)));
-        // 현재 구역을 선거구 B에 포함
-        divide(index + 1, mask);
+        arr[depth] = 1;
+        back(depth + 1);
+
+        arr[depth] = 0;
+        back(depth + 1);
+
     }
-
-    // BFS를 이용해 선거구의 연결성 확인
-    static boolean isConnected(int mask) {
-        int start = 1;
-        while (start <= N && ((mask & (1 << (start - 1))) == 0)) start++;
-        if (start > N) return false;
-
-        Queue<Integer> queue = new LinkedList<>();
-        boolean[] visited = new boolean[N + 1];
-        queue.offer(start);
-        visited[start] = true;
-        int count = 1;
-
-        while (!queue.isEmpty()) {
-            int current = queue.poll();
-            for (int next : graph.get(current)) {
-                if (!visited[next] && ((mask & (1 << (next - 1))) != 0)) {
-                    queue.offer(next);
-                    visited[next] = true;
-                    count++;
+    
+    public static void link(int num, int local){
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.add(num);
+        check[num] = true;
+        
+        while(!q.isEmpty()){
+            int cur = q.poll();
+            
+            for(int next : graph.get(cur)){
+                
+                if(arr[next] == local && !check[next]){
+                    check[next] = true;
+                    q.add(next);
                 }
+                
             }
         }
-
-        return count == Integer.bitCount(mask);
+        
     }
-
-    // 두 선거구의 인구 차이 계산
-    static int calculateDifference(int mask) {
-        int sum = 0;
-        for (int i = 1; i <= N; i++) {
-            if ((mask & (1 << (i - 1))) != 0) {
-                sum += population[i];
-            }
-        }
-        return Math.abs(totalPopulation - 2 * sum);
-    }
+    
 }
