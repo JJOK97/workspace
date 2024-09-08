@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.io.*;
 
@@ -61,7 +62,8 @@ public class Main {
 
             }
 
-            int a = 0, b = 0;
+            if(cnt == 2){
+                            int a = 0, b = 0;
 
             for(int i = 0; i < n; i++){
                 if(arr[i + 1] == 1){
@@ -71,7 +73,6 @@ public class Main {
                 }
             }
 
-            if(cnt == 2){
                 min = Math.min(min, Math.abs(a - b));
             }
 
