@@ -2,67 +2,55 @@ import java.io.*;
 import java.util.*;
 
 public class Main {
-    static int R, C;
-    static int[][] map;
-    static List<Shark> sharks;
+    static int R, C, M;
+    static List<Integer>[][] map;
 
-    static class Shark {
-        int r, c, s, d, z;
-        Shark(int r, int c, int s, int d, int z) {
-            this.r = r; this.c = c; this.s = s; this.d = d; this.z = z;
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
+
         R = Integer.parseInt(st.nextToken());
         C = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
 
-        map = new int[R + 1][C + 1];
-        sharks = new ArrayList<>();
-        sharks.add(null);  // 0번 인덱스는 사용하지 않음
+        map = new ArrayList[R + 1][C + 1];
 
-        for (int i = 1; i <= M; i++) {
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int r = Integer.parseInt(st.nextToken());
             int c = Integer.parseInt(st.nextToken());
             int s = Integer.parseInt(st.nextToken());
             int d = Integer.parseInt(st.nextToken());
             int z = Integer.parseInt(st.nextToken());
-            
-            sharks.add(new Shark(r, c, s, d, z));
-            map[r][c] = i;
+
+            map[r][c] = new ArrayList<>(Arrays.asList(r, c, s, d, z));
         }
 
         int result = 0;
+
         for (int fisher = 1; fisher <= C; fisher++) {
-            // 상어 잡기
+            // 1. 상어 잡기
             for (int i = 1; i <= R; i++) {
-                if (map[i][fisher] != 0) {
-                    result += sharks.get(map[i][fisher]).z;
-                    sharks.set(map[i][fisher], null);
-                    map[i][fisher] = 0;
+                if (map[i][fisher] != null) {
+                    result += map[i][fisher].get(4);
+                    map[i][fisher] = null;
                     break;
                 }
             }
 
-            // 상어 이동
-            int[][] newMap = new int[R + 1][C + 1];
-            for (int i = 1; i < sharks.size(); i++) {
-                Shark shark = sharks.get(i);
-                if (shark == null) continue;
+            // 2. 상어 이동
+            List<Integer>[][] newMap = new ArrayList[R + 1][C + 1];
+            for (int i = 1; i <= R; i++) {
+                for (int j = 1; j <= C; j++) {
+                    if (map[i][j] != null) {
+                        List<Integer> shark = new ArrayList<>(map[i][j]);
+                        moveShark(shark);
 
-                moveShark(shark);
-
-                if (newMap[shark.r][shark.c] == 0 || sharks.get(newMap[shark.r][shark.c]).z < shark.z) {
-                    if (newMap[shark.r][shark.c] != 0) {
-                        sharks.set(newMap[shark.r][shark.c], null);
+                        int nr = shark.get(0), nc = shark.get(1);
+                        if (newMap[nr][nc] == null || newMap[nr][nc].get(4) < shark.get(4)) {
+                            newMap[nr][nc] = shark;
+                        }
                     }
-                    newMap[shark.r][shark.c] = i;
-                } else {
-                    sharks.set(i, null);
                 }
             }
             map = newMap;
@@ -71,21 +59,27 @@ public class Main {
         System.out.println(result);
     }
 
-    private static void moveShark(Shark shark) {
-        int move = shark.d <= 2 ? shark.s % ((R - 1) * 2) : shark.s % ((C - 1) * 2);
-        
-        while (move > 0) {
-            if (shark.d == 1 && shark.r == 1) shark.d = 2;
-            else if (shark.d == 2 && shark.r == R) shark.d = 1;
-            else if (shark.d == 3 && shark.c == C) shark.d = 4;
-            else if (shark.d == 4 && shark.c == 1) shark.d = 3;
+    private static void moveShark(List<Integer> shark) {
+        int r = shark.get(0), c = shark.get(1), s = shark.get(2), d = shark.get(3);
+        int distance = s;
 
-            if (shark.d == 1) shark.r--;
-            else if (shark.d == 2) shark.r++;
-            else if (shark.d == 3) shark.c++;
-            else if (shark.d == 4) shark.c--;
+        if (d <= 2) distance %= (R - 1) * 2;
+        else distance %= (C - 1) * 2;
 
-            move--;
+        for (int i = 0; i < distance; i++) {
+            if (d == 1 && r == 1) d = 2;
+            else if (d == 2 && r == R) d = 1;
+            else if (d == 3 && c == C) d = 4;
+            else if (d == 4 && c == 1) d = 3;
+
+            if (d == 1) r--;
+            else if (d == 2) r++;
+            else if (d == 3) c++;
+            else if (d == 4) c--;
         }
+
+        shark.set(0, r);
+        shark.set(1, c);
+        shark.set(3, d);
     }
 }

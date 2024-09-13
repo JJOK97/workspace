@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 28012 KB, 시간: 532 ms
+메모리: 91448 KB, 시간: 480 ms
 
 ### 분류
 
@@ -12,13 +12,13 @@
 
 ### 제출 일자
 
-2024년 9월 12일 22:35:25
+2024년 9월 13일 09:06:14
 
 ### 문제 설명
 
 <p>낚시왕이 상어 낚시를 하는 곳은 크기가 R×C인 격자판으로 나타낼 수 있다. 격자판의 각 칸은 (r, c)로 나타낼 수 있다. r은 행, c는 열이고, (R, C)는 아래 그림에서 가장 오른쪽 아래에 있는 칸이다. 칸에는 상어가 최대 한 마리 들어있을 수 있다. 상어는 크기와 속도를 가지고 있다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 506px; height: 350px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/85c2ccad-e4b8-4397-9bd6-0ec73b0f44f8/-/preview/" style="width: 506px; height: 350px;"></p>
 
 <p>낚시왕은 처음에 1번 열의 한 칸 왼쪽에 있다. 다음은 1초 동안 일어나는 일이며, 아래 적힌 순서대로 일어난다. 낚시왕은 가장 오른쪽 열의 오른쪽 칸에 이동하면 이동을 멈춘다.</p>
 
@@ -32,7 +32,7 @@
 
 <p>왼쪽 그림의 상태에서 1초가 지나면 오른쪽 상태가 된다. 상어가 보고 있는 방향이 속도의 방향, 왼쪽 아래에 적힌 정수는 속력이다. 왼쪽 위에 상어를 구분하기 위해 문자를 적었다.</p>
 
-<p style="text-align: center;"><img alt="" src="" style="width: 1000px; height: 350px;"></p>
+<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/d03be3c0-057d-47f7-9808-202ae36a3da3/-/preview/" style="width: 1000px; height: 350px;"></p>
 
 <p>상어가 이동을 마친 후에 한 칸에 상어가 두 마리 이상 있을 수 있다. 이때는 크기가 가장 큰 상어가 나머지 상어를 모두 잡아먹는다.</p>
 
