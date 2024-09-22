@@ -1,95 +1,101 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
 
-	static int N, M, V;
-	static int[][] map;
-	static boolean[] visit;
+    static List<List<Integer>> graph;
+    static int N, M, V;
 
-	public static void main(String[] args) throws Exception {
+    static boolean[] BFS;
+    static Queue<Integer> q;
 
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static boolean[] DFS;
+    static Stack<Integer> s;
 
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		V = Integer.parseInt(st.nextToken());
+    public static void main(String[] args) throws Exception {
 
-		map = new int[N + 1][N + 1];
+        graph = new ArrayList<>();
 
-		for (int i = 0; i < M; i++) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-			st = new StringTokenizer(br.readLine());
-			int V1 = Integer.parseInt(st.nextToken());
-			int V2 = Integer.parseInt(st.nextToken());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        V = Integer.parseInt(st.nextToken());
 
-			map[V1][V2] = map[V2][V1] = 1;
-		}
+        for(int i = 0; i <= N; i++ ){
+            graph.add(new ArrayList<Integer>());
+        }
 
-		dfs(V);
+        for(int i = 0; i < M; i++){
+            st = new StringTokenizer(br.readLine());
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
 
-		System.out.println();
+            graph.get(a).add(b);
+            graph.get(b).add(a);
+        }
 
-		bfs(V);
-	}
+        for(int i = 0; i <= N; i++){
+            Collections.sort(graph.get(i));
+        }
 
-	private static void dfs(int start) {
-		Stack<Integer> stack = new Stack<>();
+        DFS = new boolean[N + 1];
+        s = new Stack<>();
+        for(int i = graph.get(V).size() - 1; i >= 0 ; i--){
+            s.add(graph.get(V).get(i));
+        }
 
-		visit = new boolean[N + 1];
+        System.out.print(V + " ");
+        DFS[V] = true;
 
-		stack.push(start);
-		visit[start] = true;
-		System.out.print(start + " ");
+        dfs();
 
-		while (!stack.isEmpty()) {
-			int current = stack.peek();
-			boolean flag = false;
+        System.out.println();
 
-			for (int i = 1; i < map.length; i++) {
+        BFS = new boolean[N + 1];
+        q = new LinkedList<>();
+        for(int i = 0; i < graph.get(V).size(); i++){
+            q.add(graph.get(V).get(i));
+        }
 
-				if (map[current][i] == 1 && !visit[i]) {
+        System.out.print(V + " ");
+        BFS[V] = true;
 
-					stack.push(i);
-					visit[i] = true;
-					System.out.print(i + " ");
-					
-					flag = true;
-					break;
+        bfs();
 
-				}
-			}
+    }
 
-			if (!flag) {
-				stack.pop();
-			}
-		}
-	}
+    public static void dfs(){
+        while(!s.isEmpty()){
+            int num = s.pop();
 
-	private static void bfs(int start) {
-		Queue<Integer> queue = new LinkedList<>();
-		visit = new boolean[N + 1];
-		queue.offer(start);
-		visit[start] = true;
-		System.out.print(start + " ");
+            if(!DFS[num]){
+                System.out.print(num + " ");
+                DFS[num] = true;
+                for(int i = graph.get(num).size() - 1; i >= 0 ; i--){
+                    s.add(graph.get(num).get(i));
+                }
+            }
+        }
+    }
 
-		while (!queue.isEmpty()) {
-			int current = queue.poll();
+    public static void bfs(){
 
-			for (int i = 1; i < map.length; i++) {
-				if (map[current][i] == 1 && !visit[i]) {
-					queue.offer(i);
-					visit[i] = true;
-					System.out.print(i + " ");
-				}
-			}
-		}
-	}
+        while(!q.isEmpty()){
+            int num = q.poll();
+
+
+            if(!BFS[num]){
+                System.out.print(num + " ");
+                BFS[num]= true;
+                for(int i = 0; i < graph.get(num).size(); i++) {
+                    q.add(graph.get(num).get(i));
+                }
+            }
+
+        }
+
+    }
+
 }
