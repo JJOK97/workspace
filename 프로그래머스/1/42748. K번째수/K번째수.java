@@ -3,30 +3,23 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] array, int[][] commands) {
         int[] answer = new int[commands.length];
+        int index = -1;
         
-        int answerIndex = 0;
-        
-        for(int index = 0; index < commands.length; index++){
+        for(int i = 0; i < commands.length; i++){
+                
+            int k = commands[i][1] - commands[i][0] + 1;
+
+            int[] z = new int[k];
             
-            int i = commands[index][0];
-            int j = commands[index][1];
-            int k = commands[index][2];
+            int check = -1;
             
-            int size = j - i + 1;
-            
-            int[] num = new int[size];
-            int arrIndex = 0;
-            for(int start = i - 1; start < j; start++){
-                num[arrIndex++] = array[start];
+
+            for(int w = commands[i][0] - 1; w < commands[i][1]; w++){
+                z[++check] = array[w];
             }
-            
-            Arrays.sort(num);
-            
-            if(index < commands.length - 1){
-                answer[answerIndex++] = num[k - 1];
-            } else {
-                answer[answerIndex] = num[k - 1];
-            }
+
+            Arrays.sort(z);
+            answer[++index] = z[commands[i][2]-1];
             
         }
         
